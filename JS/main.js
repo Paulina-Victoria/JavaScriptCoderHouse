@@ -34,7 +34,7 @@ function generarTablaDesarrollo(t,m,c,p){
 
 let opcion = 0;
 do {
-    opcion = prompt('Ingrese: \n 1 para calcular cuota \n 2 para calcular plazo \n 3 para salir');
+    opcion = prompt('Ingrese: \n 1 : para calcular cuota \n 2 : para calcular plazo \n 3 : para salir');
     opcion = parseInt(opcion);
     switch (opcion){
         case 1:
