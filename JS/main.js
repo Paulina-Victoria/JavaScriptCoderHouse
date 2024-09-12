@@ -97,6 +97,10 @@ function calcularPlazo(tasa,monto,cuota){
     return plazo;
 }
 
+function actualizarSeleccionado(valor,elemento){
+    document.getElementById(elemento).textContent = "monto seleccionado: "+valor;
+}
+
 function getCheckboxValue() {
     const productosSimulados = [];
     let contador = 0;
@@ -176,7 +180,11 @@ function actualizarProductos(){
             break;
         };
     });
-    console.log(misProductos);
+    const total = misProductos.reduce((acumulador, producto) => acumulador + producto.monto, 0);
+    if(total>0) {
+        document.getElementById("totalProductos").style.display = "block";
+        document.getElementById("total").textContent = total;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
