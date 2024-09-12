@@ -74,6 +74,9 @@ do {
 } while(opcion != 3);
  */
 
+const tasaConsumo= 0.02;
+const tasaHipotecario= 0.04/12;
+
 class productoCredito{
     constructor(tipo,monto,tasa,plazo,cuota){
         this.tipo=tipo;
@@ -84,12 +87,15 @@ class productoCredito{
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    let botonCarrito = document.getElementById("agregarProductos");
-    botonCarrito.addEventListener("click", getCheckboxValue);
-    let botonSimular = document.getElementById("simularProductos");
-    botonSimular.addEventListener("click", actualizarProductos);
-});
+function calcularCuota(tasa,monto,plazo){ 
+    cuota = Math.ceil((monto*tasa*Math.pow(1+tasa,plazo))/(Math.pow(1+tasa,plazo)-1),0);
+    return cuota;
+}
+
+function calcularPlazo(tasa,monto,cuota){
+    plazo = Math.ceil(Math.log(cuota/(cuota-monto*tasa))/Math.log(1+tasa),0); 
+    return plazo;
+}
 
 function getCheckboxValue() {
     const productosSimulados = [];
@@ -100,26 +106,42 @@ function getCheckboxValue() {
         productosSimulados.push(producto);
         contador++;
     }
+    else {
+        document.getElementById("lineaSimulador").style.display = "none";
+    }
+    
     if (document.getElementById("tarjetaCreditoCheck").checked) {
         document.getElementById("tarjetaSimulador").style.display = "block";
         const producto = new productoCredito("tarjeta",0,0,0,0);
         productosSimulados.push(producto);
         contador++;
     }
+    else {
+        document.getElementById("tarjetaSimulador").style.display = "none";
+    }
+
     if (document.getElementById("creditoConsumoCheck").checked) {
         document.getElementById("consumoSimulador").style.display = "block";
-        const producto = new productoCredito("consumo",0,0,0,0);
+        const producto = new productoCredito("consumo",0,tasaConsumo,0,0);
         productosSimulados.push(producto);
         contador++;
     }
+    else {
+        document.getElementById("consumoSimulador").style.display = "none";
+    }
+
     if (document.getElementById("creditoHipotecarioCheck").checked) {
         document.getElementById("hipotecarioSimulador").style.display = "block";
-        const producto = new productoCredito("hipotecario",0,0,0,0);
+        const producto = new productoCredito("hipotecario",0,tasaHipotecario,0,0);
         productosSimulados.push(producto);
         contador++;
     }
-    if (contador>=1){
-        document.getElementById("divBotonSimular").style.display = "block";   
+    else {
+        document.getElementById("hipotecarioSimulador").style.display = "none";
+    }
+
+    if (contador>=1 && localStorage.getItem('misProductos')!=null){
+        document.getElementById("divBotonSimular").style.display = "block"; 
     }
     localStorage.setItem('misProductos', JSON.stringify(productosSimulados))
 }
@@ -136,11 +158,22 @@ function actualizarProductos(){
             break;
             case "consumo":
                 producto.monto = parseInt(document.getElementById("montoConsumo").value);
+                producto.cuota = (document.getElementById("cuotaConsumo").value);
+                producto.plazo = calcularPlazo(producto.tasa,producto.monto,producto.cuota);
             break;
             case "hipotecario":
                 producto.monto = (document.getElementById("valorPropiedad").value-document.getElementById("valorPie").value);
+                producto.plazo = (document.getElementById("plazoHipotecario").value);
+                producto.cuota = calcularCuota(producto.tasa,producto.monto,producto.plazo); 
             break;
         };
     });
     console.log(misProductos);
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    let botonCarrito = document.getElementById("agregarProductos");
+    botonCarrito.addEventListener("click", getCheckboxValue);
+    let botonSimular = document.getElementById("simularProductos");
+    botonSimular.addEventListener("click", actualizarProductos);
+});
