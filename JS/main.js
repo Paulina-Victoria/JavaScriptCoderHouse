@@ -1,35 +1,40 @@
+/*
 const tasa= 0.04;
 let cuota = 0;
 let plazo = 0;
 let tablaDesarrollo = [];
 let monto = parseInt(prompt('Ingrese monto total del crédito a simular'));
 console.log(monto);
+while (monto<=0) {
+    monto = parseInt(prompt('El monto ingresado a simular debe ser mayor que cero'));
+    console.log(monto);
+}
 
-function calcularCuota(t,m,p){ 
-    cuota = Math.ceil((m*t*Math.pow(1+t,p))/(Math.pow(1+t,p)-1),0);
+function calcularCuota(tasa,monto,plazo){ 
+    cuota = Math.ceil((monto*tasa*Math.pow(1+tasa,plazo))/(Math.pow(1+tasa,plazo)-1),0);
     return cuota;
 }
-function calcularPlazo(t,m,c){
-    plazo = Math.ceil(Math.log(c/(c-m*t))/Math.log(1+t),0); 
+function calcularPlazo(tasa,monto,cuota){
+    plazo = Math.ceil(Math.log(cuota/(cuota-monto*tasa))/Math.log(1+tasa),0); 
     return plazo;
 }
-function generarTablaDesarrollo(t,m,c,p){
+function generarTablaDesarrollo(tasa,monto,cuota,plazo){
     let interes = 0;
     let principal = 0;
-    let saldo = m;
-    const td = [];
+    let saldo = monto;
+    const tablaDesarrollo = [];
     let mes = 0;
-    for(mes=1; mes<=p; mes++){
-        if (mes==p){
-            c = saldo*(1+t);
+    for(mes=1; mes<=plazo; mes++){
+        if (mes==plazo){
+            cuota = saldo*(1+tasa);
         }
-        interes = saldo*t;
-        principal = c-interes;
+        interes = saldo*tasa;
+        principal = cuota-interes;
         saldo = saldo-principal;
-        const registro = {mes:mes,cuota:Math.ceil(c),principal:Math.ceil(principal),interes:Math.ceil(interes),saldo:Math.ceil(saldo)};
-        td.push(registro);
+        const registro = {mes:mes,cuota:Math.ceil(cuota),principal:Math.ceil(principal),interes:Math.ceil(interes),saldo:Math.ceil(saldo)};
+        tablaDesarrollo.push(registro);
     }
-    return td;
+    return tablaDesarrollo;
 }
 
 let opcion = 0;
@@ -38,7 +43,11 @@ do {
     opcion = parseInt(opcion);
     switch (opcion){
         case 1:
-            plazo = parseInt(prompt('Ingrese plazo deseado'));
+            plazo = parseInt(prompt('Ingrese plazo deseado en meses'));
+            while (plazo<=0) {
+                plazo = parseInt(prompt('El plazo ingresado debe ser mayor que cero'));
+                console.log(monto);
+            }
             cuota = calcularCuota(tasa,monto,plazo);
             tablaDesarrollo = generarTablaDesarrollo(tasa,monto,cuota,plazo);
             console.log('La cuota es: '+ cuota);
@@ -49,6 +58,10 @@ do {
         break;
         case 2:
             cuota = parseInt(prompt('Ingrese cuota deseada'));
+            while (cuota<=0 || cuota>monto) {
+                cuota = parseInt(prompt('La cuota ingresada debe ser mayor que cero y menor que el monto total solicitado'));
+                console.log(monto);
+            }
             plazo = calcularPlazo(tasa,monto,cuota);
             tablaDesarrollo = generarTablaDesarrollo(tasa,monto,cuota,plazo);
             console.log('El plazo es: '+ plazo);
@@ -59,3 +72,75 @@ do {
         break;
     }
 } while(opcion != 3);
+ */
+
+class productoCredito{
+    constructor(tipo,monto,tasa,plazo,cuota){
+        this.tipo=tipo;
+        this.monto=monto;
+        this.tasa=tasa;
+        this.plazo=plazo;
+        this.cuota=cuota;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    let botonCarrito = document.getElementById("agregarProductos");
+    botonCarrito.addEventListener("click", getCheckboxValue);
+    let botonSimular = document.getElementById("simularProductos");
+    botonSimular.addEventListener("click", actualizarProductos);
+});
+
+function getCheckboxValue() {
+    const productosSimulados = [];
+    let contador = 0;
+    if (document.getElementById("lineaCreditoCheck").checked) {
+        document.getElementById("lineaSimulador").style.display = "block";
+        const producto = new productoCredito("linea",0,0,0,0);
+        productosSimulados.push(producto);
+        contador++;
+    }
+    if (document.getElementById("tarjetaCreditoCheck").checked) {
+        document.getElementById("tarjetaSimulador").style.display = "block";
+        const producto = new productoCredito("tarjeta",0,0,0,0);
+        productosSimulados.push(producto);
+        contador++;
+    }
+    if (document.getElementById("creditoConsumoCheck").checked) {
+        document.getElementById("consumoSimulador").style.display = "block";
+        const producto = new productoCredito("consumo",0,0,0,0);
+        productosSimulados.push(producto);
+        contador++;
+    }
+    if (document.getElementById("creditoHipotecarioCheck").checked) {
+        document.getElementById("hipotecarioSimulador").style.display = "block";
+        const producto = new productoCredito("hipotecario",0,0,0,0);
+        productosSimulados.push(producto);
+        contador++;
+    }
+    if (contador>=1){
+        document.getElementById("divBotonSimular").style.display = "block";   
+    }
+    localStorage.setItem('misProductos', JSON.stringify(productosSimulados))
+}
+
+function actualizarProductos(){
+    const misProductos = JSON.parse(localStorage.getItem('misProductos'))
+    misProductos.forEach(producto => {
+        switch (producto.tipo){ 
+            case "linea":
+                producto.monto = parseInt(document.getElementById("montoLinea").value);
+            break;
+            case "tarjeta":
+                producto.monto = parseInt(document.getElementById("montoTarjeta").value);
+            break;
+            case "consumo":
+                producto.monto = parseInt(document.getElementById("montoConsumo").value);
+            break;
+            case "hipotecario":
+                producto.monto = (document.getElementById("valorPropiedad").value-document.getElementById("valorPie").value);
+            break;
+        };
+    });
+    console.log(misProductos);
+}

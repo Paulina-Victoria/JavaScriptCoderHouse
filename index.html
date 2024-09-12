@@ -5,9 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- JS -->
     <script defender src = "./js/main.js"></script>
-    <title>Simulador de Credito</title>
+    <title>Simulador de Crédito</title>
 </head>
 <body>
-    <h1>Entrega 1 - Paulina Villarroel</h1>
+    <h1>Entrega 2 - Paulina Villarroel - Simulador de productos de crédito</h1>
+    <h2>Escoja los productos que desea simular?</h2>
+    <input type="checkbox" id="lineaCreditoCheck"> <label for="lineaCreditoCheck">Cuenta corriente + línea de Crédito</label>
+    <input type="checkbox" id="tarjetaCreditoCheck"> <label for="tarjetaCreditoCheck">Tarjeta de crédtito</label>
+    <input type="checkbox" id="creditoConsumoCheck"> <label for="creditoConsumoCheck">Crédito de consumo</label>
+    <input type="checkbox" id="creditoHipotecarioCheck"> <label for="creditoHipotecarioCheck">Crédito Hipotecario</label>
+    <button type ="button" id="agregarProductos">Seleccionar productos</button>
+
+    <div id="lineaSimulador" style="display:none;">
+        <h3>Ingrese monto de línea de crédito a solicitar</h3>
+        <span>300000</span>
+        <input type="range" id="montoLinea" min="300000" max="2000000" step="50000" value="1000000">
+        <span>2000000</span>
+        <p id="valorIngresadoLinea">monto seleccionado: 1000000</p>
+    </div>
+    <div id="tarjetaSimulador" style="display:none;">
+        <h3>Ingrese monto de tarjeta de crédito a solicitar</h3>
+        <span>500000</span>
+        <input type="range" id="montoTarjeta" min="500000" max="10000000" step="100000" value="2000000">
+        <span>10000000</span>
+        <p id="valorIngresadoTarjeta">monto seleccionado: 2000000</p>
+    </div>
+    <div id="consumoSimulador" style="display:none;">
+        <h3>Ingrese monto de crédito de consumo a solicitar</h3>
+        <span>1000000</span>
+        <input type="range" id="montoConsumo" min="1000000" max="30000000" step="100000" value="5000000">
+        <span>30000000</span>
+        <p id="valorIngresadoConsumo">monto seleccionado: 5000000</p>
+    </div>
+    <div id="hipotecarioSimulador" style="display:none;"> 
+        <h3>Ingrese valor de la propiedad en UF</h3>
+        <input type="text" id="valorPropiedad">
+        <h4>Ingrese valor del pie</h4>
+        <input type="text" id="valorPie">
+    </div>
+    <div id="divBotonSimular" style="display:none;">
+        <button type ="button" id="simularProductos">Simular productos</button>
+    </div>
+
 </body>
 </html>
