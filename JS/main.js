@@ -107,7 +107,9 @@ function getCheckboxValue() {
         contador++;
     }
     else {
-        document.getElementById("lineaSimulador").style.display = "none";
+        if (document.getElementById("lineaSimulador").style.display == "block"){
+                document.getElementById("lineaSimulador").style.display = "none";
+        }
     }
     
     if (document.getElementById("tarjetaCreditoCheck").checked) {
@@ -117,7 +119,9 @@ function getCheckboxValue() {
         contador++;
     }
     else {
-        document.getElementById("tarjetaSimulador").style.display = "none";
+        if(document.getElementById("tarjetaSimulador").style.display == "block"){
+            document.getElementById("tarjetaSimulador").style.display = "none";
+        }
     }
 
     if (document.getElementById("creditoConsumoCheck").checked) {
@@ -127,7 +131,9 @@ function getCheckboxValue() {
         contador++;
     }
     else {
-        document.getElementById("consumoSimulador").style.display = "none";
+        if(document.getElementById("consumoSimulador").style.display == "block"){
+            document.getElementById("consumoSimulador").style.display = "none";
+        }
     }
 
     if (document.getElementById("creditoHipotecarioCheck").checked) {
@@ -137,7 +143,9 @@ function getCheckboxValue() {
         contador++;
     }
     else {
-        document.getElementById("hipotecarioSimulador").style.display = "none";
+        if (document.getElementById("hipotecarioSimulador").style.display == "block"){
+            document.getElementById("hipotecarioSimulador").style.display = "none";
+        }
     }
 
     if (contador>=1 && localStorage.getItem('misProductos')!=null){
